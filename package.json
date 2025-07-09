@@ -18,5 +18,8 @@
     "apps/*",
     "packages/*"
   ],
-  "packageManager": "pnpm@9.15.1"
+  "packageManager": "pnpm@9.15.1",
+  "dependencies": {
+    "@google/genai": "^1.8.0"
+  }
 }
