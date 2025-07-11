@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import Image from 'next/image';
 
 interface HistoricalEntry {
   id: string;
@@ -115,7 +116,7 @@ export default function HistoryTimeline({ historicalEntries = [] }: HistoryTimel
                 From your example, it seems like it's a base64 string, which likely is NOT stringified.
             */}
             {displayImageURL && displayImageURL !== '""' ? (
-                <img 
+                <Image 
                   src={displayImageURL.startsWith('"') && displayImageURL.endsWith('"') ? JSON.parse(displayImageURL) : displayImageURL} 
                   alt="Historical Scan" 
                   className="mt-2 max-w-xs rounded-md border border-green-700" 

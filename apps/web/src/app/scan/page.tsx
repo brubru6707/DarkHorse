@@ -11,35 +11,7 @@ import HistoryTimeline from "@/components/scan/History";
 import ImageVisualization from "@/components/scan/ImageVisualization";
 import Recommendation from "@/components/scan/Recommendation";
 import { useRouter } from "next/navigation";
-
-type EssentialDetails = {
-  batteryLevel?: number;
-  city?: string;
-  connectionType?: string;
-  deviceMemory?: number;
-  platform?: string;
-  userAgent?: string;
-  // Add any other properties you deem essential
-};
-
-export function extractEssentialDetails(
-  fullData: any | null
-): EssentialDetails | null {
-  if (!fullData) {
-    return null;
-  }
-
-  const essential: EssentialDetails = {
-    batteryLevel: fullData.batteryLevel,
-    city: fullData.city,
-    connectionType: fullData.connectionType,
-    deviceMemory: fullData.deviceMemory,
-    platform: fullData.platform,
-    userAgent: fullData.userAgent,
-  };
-
-  return essential;
-}
+import { extractEssentialDetails } from '@/lib/essentialDetails';
 
 export default function ScanPage() {
   const logUserData = useMutation(api.logUserData.logUserData);
@@ -55,9 +27,15 @@ export default function ScanPage() {
     return latestDataLogs[latestDataLogs.length - 1];
   }, [latestDataLogs]);
 
+  "use client";
+
   const essentialDetails = useMemo(() => {
-    return extractEssentialDetails(latestDataEntry?.data ?? null);
-  }, [latestDataEntry]);
+      if (!latestDataLogs || latestDataLogs.length === 0) {
+          return null;
+      }
+      const lastEntry = latestDataLogs[latestDataLogs.length - 1];
+      return extractEssentialDetails(lastEntry.data);
+  }, [latestDataLogs]);
 
   const sendUserData = useCallback(async () => {
     try {

@@ -135,7 +135,7 @@ export default function ImageVisualization({ latestData, logId, previousImageURL
         </div>
       )}
       {imageDescription && (
-        <p className="italic text-gray-600 mb-4">"{imageDescription}"</p>
+        <p className="italic text-gray-600 mb-4">&quot;{imageDescription}&quot;</p>
       )}
     </>
   );

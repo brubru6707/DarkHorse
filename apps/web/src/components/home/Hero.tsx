@@ -36,7 +36,7 @@ export default function Hero() {
           <div className="bg-green-950/60 rounded-2xl p-10 shadow-lg flex flex-col h-full">
             <h2 className="text-3xl font-semibold text-[--color-primary] mb-3">🌐 Why Online Exposure Matters</h2>
             <p className="text-xl">
-              Your browser gives away more than you think — from fonts and hardware to battery life and GPU models. When combined, these traits can uniquely identify and profile you. DarkHorse visualizes this exposure, so you're no longer in the dark.
+              Your browser gives away more than you think — from fonts and hardware to battery life and GPU models. When combined, these traits can uniquely identify and profile you. DarkHorse visualizes this exposure, so you&apos;re no longer in the dark.
             </p>
           </div>
           {/* Card 4 */}

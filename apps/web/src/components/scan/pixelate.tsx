@@ -1,5 +1,6 @@
 'use client';
 
+import Image from 'next/image';
 import React, { useEffect, useRef, useState, useCallback } from 'react';
 
 interface PixelatedImageProps {
@@ -54,7 +55,7 @@ const PixelatedImageDisplay: React.FC<PixelatedImageProps> = ({
 
   return (
     <div>
-      <img
+      <Image
         ref={imageRef}
         src={`data:image/png;base64,${base64Image}`}
         alt="Generated Image"
