@@ -17,7 +17,7 @@ export async function POST(req: Request) {
 
         const ai = new GoogleGenAI({ apiKey: GEMAI_API_KEY });
 
-        const prompt = `USING THE ATTRIBUTES AND VALUES, OUTPUT ONLY A 1 PARAGRAPH DESCRIPTION OF AN IMAGE DEPECTING THE USER. THE FOLLOWING IS THE DATA:\n\n${JSON.stringify(data, null, 2)}`;
+        const prompt = `USING THE ATTRIBUTES AND VALUES, OUTPUT 3 PARAGRAPH RECOMMENDATIONS FOR THE USER TO BE SAFER ONLINE. THE FOLLOWING IS THE DATA:\n\n${JSON.stringify(data, null, 2)}`;
 
         const response = await ai.models.generateContent({
             model: "gemini-2.0-flash-lite",
@@ -25,10 +25,10 @@ export async function POST(req: Request) {
         });
 
         const responseText = response.text;
-        return NextResponse.json({ description: responseText }, { status: 200 });
+        return NextResponse.json({ recommendation: responseText }, { status: 200 });
 
     } catch (error) {
-        console.error("Error generating image description:", error);
-        return NextResponse.json({ message: 'Failed to generate description', error: (error as Error).message }, { status: 500 });
+        console.error("Error generating image recommendation:", error);
+        return NextResponse.json({ message: 'Failed to generate recommendation', error: (error as Error).message }, { status: 500 });
     }
 }

@@ -1,52 +1,53 @@
-import Image from "next/image";
-import Link from "next/link";
+"use client";
 
-const Hero = () => {
+import { useRouter } from "next/navigation";
+
+export default function Hero() {
+  const router = useRouter();
   return (
-    <section className="bg_image">
-      <div className="container py-16 sm:py-36 px-6 sm:px-0">
-        <div className="flex sm:flex-wrap flex-nowrap justify-between items-center max-h-[690px] h-full">
-          <div className="">
-            <h2 className="font-montserrat pb-7 sm:pb-[26px] text-black text-[44px] sm:text-[75px] not-italic font-medium leading-[111.3%] tracking-[-1.1px] sm:tracking-[-1.875px]">
-              The Ultimate <br /> Note-Taking Experience
-            </h2>
-            <p className="font-montserrat sm:pb-16 max-w-[680px] text-black text-xl sm:text-3xl not-italic font-normal leading-[103.3%] tracking-[-0.5px] sm:tracking-[-0.75px] pb-11">
-              UseNotes harnesses the power of artificial intelligence to
-              revolutionize the way you capture, organize, and recall your
-              thoughts
+    <section className="w-full">
+      {/* Hero Top Section with Gradient */}
+      <div className="min-h-screen flex flex-col justify-center items-center px-6 text-white text-center bg-gradient-to-b from-[--background-color] via-green-900 via-70% to-green-700">
+        <h1 className="text-7xl font-extrabold mb-6 text-[--color-primary]">DarkHorse — See What the Web Sees</h1>
+        <p className="text-2xl max-w-3xl mx-auto mb-10">
+          A powerful privacy visualization tool that reveals just how much of your digital fingerprint is exposed the moment you load a website.
+        </p>
+        <button className="scan-button mb-16 cursor-pointer" onClick={() => router.push("/scan")}>Start Your Scan</button>
+      </div>
+
+      {/* Info Blocks Section with Solid Background */}
+      <div className="w-full bg-[--background-color] text-white">
+        <div className="max-w-5xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-10 text-lg pb-16 pt-16">
+          {/* Card 1 */}
+          <div className="bg-green-950/60 rounded-2xl p-10 shadow-lg flex flex-col h-full">
+            <h2 className="text-3xl font-semibold text-[--color-primary] mb-3">🔍 What is DarkHorse?</h2>
+            <p className="text-xl">
+              DarkHorse is an AI-powered tool that collects and visualizes personal, technical, and environmental data your browser leaks online. It transforms metadata into a rich image and readable fingerprint — helping you understand what others can infer about you, instantly.
             </p>
-            <Link href={"/notes"}>
-              <button className="button gap-2.5 px-8 py-4 font-montserrat text-white text-xl sm:text-3xl not-italic font-semibold leading-[90.3%] tracking-[-0.5px] sm:tracking-[-0.75px]">
-                Get Started
-              </button>
-            </Link>
           </div>
-          <div className="max-w-[570px] w-full h-full">
-            <div className="relative max-w-[570px] w-full h-[380px] sm:h-[680px]">
-              <div className="absolute z-10 inset-0 flex justify-center items-center bg-[#0983DF99] opacity-40 blur-[102px] rounded-[673px]">
-                <Image
-                  src={"/images/hero_image_bg.svg"}
-                  width={541}
-                  height={673}
-                  alt="hero"
-                  className="w-[344px] sm:w-[541px] "
-                />
-              </div>
-              <div className=" absolute z-50 inset-0 flex justify-center items-center">
-                <Image
-                  src={"/images/hero.png"}
-                  width={561}
-                  height={456}
-                  alt="hero"
-                  className="w-[357px] sm:w-[561px]"
-                />
-              </div>
-            </div>
+          {/* Card 2 */}
+          <div className="bg-green-950/60 rounded-2xl p-10 shadow-lg flex flex-col h-full">
+            <h2 className="text-3xl font-semibold text-[--color-primary] mb-3">✅ Consent-Based Scanning</h2>
+            <p className="text-xl">
+              Some features, like IP-based network scans, require your permission. DarkHorse will always ask before collecting or visualizing sensitive data like open ports or ISP information. These scans are safe, anonymous, and never stored or shared.
+            </p>
+          </div>
+          {/* Card 3 */}
+          <div className="bg-green-950/60 rounded-2xl p-10 shadow-lg flex flex-col h-full">
+            <h2 className="text-3xl font-semibold text-[--color-primary] mb-3">🌐 Why Online Exposure Matters</h2>
+            <p className="text-xl">
+              Your browser gives away more than you think — from fonts and hardware to battery life and GPU models. When combined, these traits can uniquely identify and profile you. DarkHorse visualizes this exposure, so you're no longer in the dark.
+            </p>
+          </div>
+          {/* Card 4 */}
+          <div className="bg-green-950/60 rounded-2xl p-10 shadow-lg flex flex-col h-full">
+            <h2 className="text-3xl font-semibold text-[--color-primary] mb-3">📊 What We Use</h2>
+            <p className="text-xl">
+              DarkHorse collects metadata including IP address, location, device type, browser capabilities, permissions, WebGL/Canvas fingerprints, and (if enabled) open port results via Nmap. All of this is then used to generate a uniquely AI-powered image reflecting your digital fingerprint.
+            </p>
           </div>
         </div>
       </div>
     </section>
   );
-};
-
-export default Hero;
+}

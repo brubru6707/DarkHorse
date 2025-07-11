@@ -45,7 +45,9 @@ const LoginScreen = ({ navigation }) => {
                   phoneNumber: "+1234567890" // Dummy number - you should handle this properly
                 });
                 
-                const { createdSessionId: newSessionId } = await signUp.create();
+                const { createdSessionId: newSessionId } = await signUp.create({
+                  phoneNumber: "+1234567890" // Dummy number - you should handle this properly
+                });
                 
                 if (newSessionId) {
                   await setActive({ session: newSessionId });
@@ -61,7 +63,9 @@ const LoginScreen = ({ navigation }) => {
             } else {
               // Phone is optional, just create the user
               try {
-                const { createdSessionId: newSessionId } = await signUp.create();
+                const { createdSessionId: newSessionId } = await signUp.create({
+                  phoneNumber: "+1234567890" // Dummy number - you should handle this properly
+                });
                 
                 if (newSessionId) {
                   await setActive({ session: newSessionId });
@@ -156,6 +160,8 @@ const styles = StyleSheet.create({
     width: 74,
     height: 74,
     marginTop: 20,
+    backgroundColor: "#008000",
+    borderRadius: 10,
   },
   title: {
     marginTop: 49,
@@ -190,7 +196,7 @@ const styles = StyleSheet.create({
   },
   buttonText: {
     textAlign: "center",
-    color: "#FFF",
+    color: "#fff",
     fontFamily: "SemiBold",
     fontSize: RFValue(14),
   },
@@ -217,7 +223,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "center",
-    backgroundColor: "#FFF",
+    backgroundColor: "#fff",
     borderRadius: 10,
     borderWidth: 1,
     borderColor: "#D0D5DD",
@@ -229,7 +235,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "center",
     alignItems: "center",
-    backgroundColor: "#FFF",
+    backgroundColor: "#fff",
     padding: 15,
     borderRadius: 10,
     borderWidth: 1,

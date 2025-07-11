@@ -1,16 +1,14 @@
 import type { Metadata } from "next";
-import { Inter, Montserrat, Lato } from "next/font/google";
+import { Pixelify_Sans } from "next/font/google";
 import { cn } from "@/lib/utils";
 import "./globals.css";
 import ConvexClientProvider from "./ConvexClientProvider";
 
-const inter = Inter({ subsets: ["latin"] });
-const montserrat = Montserrat({ subsets: ["latin"] });
-const lato = Lato({ weight: "400", subsets: ["latin"] });
+const pixel = Pixelify_Sans({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "Notes App",
-  description: "This is an app to take notes.",
+  title: "DarkHorse",
+  description: "This is an app to take showcases how vulnerable you are online...",
 };
 
 export default function RootLayout({
@@ -20,7 +18,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body className={cn(inter.className, montserrat.className, lato.className)}>
+      <body className={cn(pixel.className, "bg-[var(--background-color)]")}>
         <ConvexClientProvider>{children}</ConvexClientProvider>
       </body>
     </html>

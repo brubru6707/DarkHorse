@@ -30,12 +30,100 @@ export const getUserDataLogs = query({
     const identity = await getUserId(ctx);
     if (!identity) return null;
 
-    const notes = await ctx.db
+    const userDataLogs = await ctx.db
       .query("userDataLogs")
       .filter((q) => q.eq(q.field("userId"), identity))
       .collect();
 
-    return notes;
+    return userDataLogs;
+  },
+});
+
+export const updateRecommendation = mutation({
+  args: {
+    id: v.id("userDataLogs"),
+    recommendation: v.string(),
+  },
+  handler: async (ctx, args) => {
+    const identity = await getUserId(ctx);
+    if (!identity) {
+      throw new Error("Not authenticated");
+    }
+
+    const existing = await ctx.db.get(args.id);
+    if (!existing || existing.userId !== identity) {
+      throw new Error("Unauthorized or log not found");
+    }
+
+    await ctx.db.patch(args.id, {
+      recommendations: args.recommendation,
+    });
+  },
+});
+
+export const updateImageDescription = mutation({
+  args: {
+    id: v.id("userDataLogs"),
+    imageDescription: v.string(),
+  },
+  handler: async (ctx, args) => {
+    const identity = await getUserId(ctx);
+    if (!identity) {
+      throw new Error("Not authenticated");
+    }
+
+    const existing = await ctx.db.get(args.id);
+    if (!existing || existing.userId !== identity) {
+      throw new Error("Unauthorized or log not found");
+    }
+
+    await ctx.db.patch(args.id, {
+      imageDescription: args.imageDescription,
+    });
+  },
+});
+
+export const updateImageURL = mutation({
+  args: {
+    id: v.id("userDataLogs"),
+    imageURL: v.string(),
+  },
+  handler: async (ctx, args) => {
+    const identity = await getUserId(ctx);
+    if (!identity) {
+      throw new Error("Not authenticated");
+    }
+
+    const existing = await ctx.db.get(args.id);
+    if (!existing || existing.userId !== identity) {
+      throw new Error("Unauthorized or log not found");
+    }
+
+    await ctx.db.patch(args.id, {
+      imageURL: args.imageURL,
+    });
+  },
+});
+
+export const updateNmapData = mutation({
+  args: {
+    id: v.id("userDataLogs"),
+    nmapData: v.string(),
+  },
+  handler: async (ctx, args) => {
+    const identity = await getUserId(ctx);
+    if (!identity) {
+      throw new Error("Not authenticated");
+    }
+
+    const existing = await ctx.db.get(args.id);
+    if (!existing || existing.userId !== identity) {
+      throw new Error("Unauthorized or log not found");
+    }
+
+    await ctx.db.patch(args.id, {
+      nmapData: args.nmapData,
+    });
   },
 });
 
