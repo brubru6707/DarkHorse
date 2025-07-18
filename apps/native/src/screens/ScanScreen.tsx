@@ -4,52 +4,30 @@ import {
   View,
   Text,
   TextInput,
-  TouchableOpacity,
   Image,
-  FlatList,
   Dimensions,
 } from "react-native";
-import { Feather, AntDesign } from "@expo/vector-icons";
+import { Feather } from "@expo/vector-icons";
 import { RFValue } from "react-native-responsive-fontsize";
-import { useAuth, useUser } from "@clerk/clerk-expo";
-import { api } from "@packages/backend/convex/_generated/api";
-import { useQuery } from "convex/react";
+import { useUser } from "@clerk/clerk-expo";
 
 const Scan = ({ navigation }) => {
   const user = useUser();
   const imageUrl = user?.user?.imageUrl;
   const firstName = user?.user?.firstName;
 
-  const allDataLogs = useQuery(api.logUserData.getUserDataLogs);
   const [search, setSearch] = useState("");
-
-  const finalDataLog = allDataLogs[allDataLogs.length - 1];
-
-  // const renderItem = ({ item }) => (
-  //   <TouchableOpacity
-  //     onPress={() =>
-  //       navigation.navigate("InsideNoteScreen", {
-  //         item: item,
-  //       })
-  //     }
-  //     activeOpacity={0.5}
-  //     style={styles.noteItem}
-  //   >
-  //     <Text style={styles.noteText}>{item.title}</Text>
-  //   </TouchableOpacity>
-  // );
 
   return (
     <View style={styles.container}>
       <View style={styles.header}>
         <Image
-          source={require("../assets/icons/logo.png")} // Replace with your logo image file
+          source={require("../assets/icons/logo.png")} 
           style={styles.logo}
         />
       </View>
 
       <View style={styles.yourScansContainer}>
-        {/* @ts-ignore, for css purposes */}
         <Image style={styles.avatarSmall} />
         <Text style={styles.title}>Your Scans</Text>
         {imageUrl ? (

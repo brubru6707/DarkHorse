@@ -4,11 +4,11 @@ import { internal } from "./_generated/api";
 
 const crons = cronJobs();
 
-// Schedule the internal mutation to reset scan counts monthly
 crons.monthly(
-  "resetScanCounts", // A unique name for your cron job
-  { day: 1, hourUTC: 0, minuteUTC: 0 }, // Every 1st of the month at midnight UTC
-  internal.scheduledFunctions.resetAllScanCounts // Reference to your internal mutation
+  "monthlySubscriptionScanReset",
+  { day: 1, hourUTC: 0, minuteUTC: 0 },
+  // Make sure this matches the export name in scheduledFunctions.ts
+  internal.scheduledFunctions.monthlyScanResetAction
 );
 
-export default crons; // Export the crons object
+export default crons;

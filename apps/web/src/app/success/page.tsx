@@ -18,14 +18,43 @@ export default function SuccessPage() {
   const router = useRouter();
 
   useEffect(() => {
-    if (userId && isClerkLoaded && sessionId) {
-      setMessage('Payment successful! Your Pro plan is now active.');
-      upgradeUserPlan({ userId: userId});
+    const handleSuccessfulPayment = async () => {
+      if (!userId || !isClerkLoaded || !sessionId) {
+        // If essential data is missing, redirect to home
+        router.push('/');
+        return;
+      }
+
+      try {
+        // 1. Call your Next.js API route to fetch Stripe session details
+        const response = await fetch(`/api/get-stripe-session-details?sessionId=${sessionId}`);
+        const data = await response.json();
+
+        if (response.ok && data.stripeCustomerId) {
+          // 2. Use the retrieved stripeCustomerId to upgrade the user's plan in Convex
+          await upgradeUserPlan({
+            userId: userId,
+            stripeCustomerId: data.stripeCustomerId,
+          });
+          setMessage('Payment successful! Your Pro plan is now active.');
+        } else {
+          setMessage(`Payment processing failed: ${data.message || 'Could not retrieve session details.'}`);
+          console.error('Failed to get Stripe session details:', data.message);
+        }
+      } catch (error) {
+        console.error('Error during success page processing:', error);
+        setMessage('An error occurred during payment processing. Please contact support.');
+      }
+    };
+
+    // Only run this effect once we have the userId, Clerk loaded, and sessionId
+    if (isClerkLoaded && userId && sessionId) {
+      handleSuccessfulPayment();
+    } else if (isClerkLoaded && !userId) {
+      // If Clerk is loaded but no userId, means user is not logged in, redirect
+      router.push('/sign-in'); // Or your main page
     }
-    else {
-      router.push('/');
-    }
-  }, [sessionId, userId, upgradeUserPlan]);
+  }, [sessionId, userId, isClerkLoaded, upgradeUserPlan, router]);
 
   return (
     <>

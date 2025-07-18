@@ -19,6 +19,7 @@ export default defineSchema({
     plan: v.union(v.literal("free"), v.literal("pro")),
     scansRemaining: v.number(), 
     stripeCustomerId: v.optional(v.string()), 
+    lastScanResetAt: v.optional(v.number()),
   })
   .index("by_user_id", ["userId"])
   .index("by_email", ["email"]), 

@@ -1,12 +1,18 @@
-import { mutation, query } from "./_generated/server";
+import { internalQuery, mutation, query } from "./_generated/server";
 import { v } from "convex/values";
 import { getUserId } from "./logUserData";
 
 export const upgradeUserPlan = mutation({
   args: {
-    userId: v.string()
+    userId: v.string(),
+    stripeCustomerId: v.string()
   },
   handler: async (ctx, args) => {
+    const identity = await getUserId(ctx);
+    if (!identity || identity !== args.userId) {
+      throw new Error("Not authenticated or unauthorized");
+    }
+
     const user = await ctx.db
       .query("users")
       .withIndex("by_user_id", (q) => q.eq("userId", args.userId))
@@ -14,15 +20,12 @@ export const upgradeUserPlan = mutation({
 
     if (!user) 
       throw new Error("User not found");
-    if (user && user.plan === "free") {
-      console.log("Upgrading user plan...");
-      await ctx.db.patch(user._id, {
-        plan: "pro",
-        scansRemaining: 30,
-      });
-    } else {
-      console.warn(`User with email ${args.userId} not found when updating plan.`);
-    }
+
+    await ctx.db.patch(user._id, {
+      plan: "pro",
+      scansRemaining: 30,
+      stripeCustomerId: args.stripeCustomerId,
+    });
   },
 });
 
@@ -122,5 +125,79 @@ export const getUserPlan = query({
     const user = await ctx.db.query("users").withIndex("by_user_id", (q) => q.eq("userId", identity)).unique();
     if (!user) return null;
     return user.plan;
+  },
+});
+
+export const downgradeUserPlan = mutation({
+  args: {
+    userId: v.string(),
+  },
+  handler: async (ctx, args) => {
+    const user = await ctx.db
+      .query("users")
+      .withIndex("by_user_id", (q) => q.eq("userId", args.userId))
+      .unique();
+
+    if (!user) 
+      throw new Error("User not found");
+
+    await ctx.db.patch(user._id, {
+      stripeCustomerId: undefined,
+    });
+  },
+});
+
+export const getUserByClerkId = query({
+  args: { clerkId: v.string() },
+  handler: async (ctx, args) => {
+    return await ctx.db
+      .query("users")
+      .withIndex("by_user_id", (q) => q.eq("userId", args.clerkId))
+      .first();
+  },
+});
+
+export const getUserStripeCustomerId = query({
+  args: {userId: v.string()},
+  handler: async (ctx, args) => {
+    const user = await ctx.db
+      .query("users")
+      .withIndex("by_user_id", (q) => q.eq("userId", args.userId))
+      .first();
+
+    if (!user) return null;
+    return user.stripeCustomerId;
+  },
+});
+
+export const resetUserScans = mutation({
+  args: {
+    userId: v.string(),
+  },
+  handler: async (ctx, args) => {
+    const user = await ctx.db
+      .query("users")
+      .withIndex("by_user_id", (q) => q.eq("userId", args.userId))
+      .unique();
+
+    if (!user) {
+      console.warn(`Attempted to reset scans for non-existent user: ${args.userId}`);
+      return;
+    }
+
+    const maxScansForPlan = user.plan === "pro" ? 30 : 3;
+
+    await ctx.db.patch(user._id, {
+      scansRemaining: maxScansForPlan,
+      lastScanResetAt: Date.now(), 
+    });
+
+    console.log(`User ${args.userId} scan count reset to ${maxScansForPlan}`);
+  },
+});
+
+export const getAllUsersForResetInternal = internalQuery({
+  handler: async (ctx) => {
+    return await ctx.db.query("users").collect();
   },
 });

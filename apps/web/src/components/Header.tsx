@@ -1,42 +1,48 @@
+// Header.tsx
 'use client';
 
 import Image from 'next/image';
 import Link from 'next/link';
-import SignOutComponent from './SignOutComponent';
 import { useEffect, useState } from 'react';
 import { SignOutButton, useAuth } from '@clerk/nextjs';
-import { useMutation, useQuery } from 'convex/react';
+import { useQuery } from 'convex/react'; // No longer need useMutation here for setScanCount
 import { api } from '@packages/backend/convex/_generated/api';
 
 export default function Header() {
   const { userId, isLoaded: isClerkLoaded } = useAuth();
-  const setScanCount = useMutation(api.users.setScanCount);
+  
+  // Removed setScanCount mutation call from here as it's now handled by the server-side cron
+  // const setScanCount = useMutation(api.users.setScanCount); 
+
   const isUserInConvex = useQuery(api.users.isUserInConvex);
-  const latestDataLogs = useQuery(api.logUserData.getUserDataLogs);
   const getUserPlan = useQuery(api.users.getUserPlan);
-  const [scanCount, setScanCountFrontend] = useState(3);
+  // NEW: Fetch the actual remaining scans from the user document, which is reset by the cron
+  const getUserRemainingScans = useQuery(api.users.getUserRemainingScans); 
+  // This query should now be updated to only fetch logs from the current billing cycle
+  const latestDataLogs = useQuery(api.logUserData.getUserDataLogs); 
+  const getUserStripeCustomerId = useQuery(api.users.getUserStripeCustomerId, {userId: userId ?? ""});
+  
+  // Use a distinct state for the display value of scans left
+  const [scanCountDisplay, setScanCountDisplay] = useState(0); 
   const [userPlan, setUserPlan] = useState<"free" | "pro" | null | undefined>(undefined);
 
   useEffect(() => {
     if (isClerkLoaded && userId) {
-      const plan = getUserPlan;
-      setUserPlan(plan);
-      if (latestDataLogs?.length && latestDataLogs?.length >= (userPlan === "pro" ? 30 : 3)) {
-        setScanCountFrontend(0);
-        setScanCount({
-          userId: userId,
-          scansRemaining: 0,
-        });
+      // Update local state for user plan
+      setUserPlan(getUserPlan); 
+
+      // Only proceed if getUserRemainingScans and latestDataLogs have loaded
+      if (getUserRemainingScans !== undefined && latestDataLogs !== undefined) {
+        // The scansRemaining from the user object already reflects the monthly reset.
+        // We only need to subtract the current month's *consumed* usage from it.
+        const currentMonthLogsCount = latestDataLogs?.length ?? 0;
+        
+        // Calculate the actual remaining scans for display. Ensure it doesn't go below zero.
+        const remaining = Math.max(0, (getUserRemainingScans ?? 0) - currentMonthLogsCount);
+        setScanCountDisplay(remaining);
       }
-      else {
-        setScanCountFrontend((userPlan === "pro" ? 30 : 3) - (latestDataLogs?.length ?? 0));
-        setScanCount({
-        userId: userId,
-          scansRemaining: (userPlan === "pro" ? 30 : 3) - (latestDataLogs?.length ?? 0),
-          });
-        }
     }
-  }, [isClerkLoaded, userId, latestDataLogs, setScanCount, scanCount]);
+  }, [isClerkLoaded, userId, getUserPlan, getUserRemainingScans, latestDataLogs]); // All dependencies are correctly listed
 
   return (
     <div className="w-[90vw] max-w-full bg-background-color text-white py-2 sm:py-4 mt-4 rounded-lg border-2 border-green-500 mx-auto">
@@ -57,7 +63,7 @@ export default function Header() {
                 </h1>
                 {isClerkLoaded && userId && isUserInConvex === true && (
                   <span className="text-green-400 text-sm mt-1 text-center w-full">
-                    {userPlan}: {scanCount} scans left
+                    {userPlan}: {scanCountDisplay} scans left
                   </span>
                 )}
               </div>
@@ -92,6 +98,14 @@ export default function Header() {
               <div className="cursor-pointer hover:text-primary font-medium transition-colors duration-200 px-3 sm:px-4 py-2 text-sm sm:text-base">
                 <SignOutButton />
               </div>
+            )}
+            {getUserStripeCustomerId && (
+            <Link
+              href="/billing"
+              className="px-3 sm:px-6 py-2 text-white hover:text-primary font-medium transition-colors duration-200 text-sm sm:text-base"
+              >
+                Billing
+              </Link>
             )}
           </nav>
         </div>
