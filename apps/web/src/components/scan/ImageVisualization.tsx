@@ -61,56 +61,62 @@ interface ImageVisualizationProps {
   previousImageDescription: string | null;
 }
 
-interface ImageVisualizationProps {
-  latestData: object | null;
-  logId: Id<"userDataLogs"> | null;
-  previousImageURL: string | null;
-  previousImageDescription: string | null;
-}
-
 export default function ImageVisualization({ latestData, logId, previousImageURL, previousImageDescription }: ImageVisualizationProps) {
   const [imageDescription, setImageDescription] = useState<string | null>(previousImageDescription);
   const [imageURL, setImageURL] = useState<string | null>(previousImageURL);
   const updateImageURL = useMutation(api.logUserData.updateImageURL);
   const updateImageDescription = useMutation(api.logUserData.updateImageDescription);
 
-  const generationAttemptedRef = React.useRef<Id<"userDataLogs"> | null>(null);
+  const generationAttemptedForLogIdRef = React.useRef<Id<"userDataLogs"> | null>(null);
 
   useEffect(() => {
-    if (previousImageDescription && previousImageURL) {
+    if (imageDescription !== previousImageDescription) {
       setImageDescription(previousImageDescription);
+    }
+    if (imageURL !== previousImageURL) {
       setImageURL(previousImageURL);
-      if (logId && generationAttemptedRef.current !== logId) {
-        generationAttemptedRef.current = null;
-      }
+    }
+
+    if (previousImageDescription && previousImageURL && generationAttemptedForLogIdRef.current === logId) {
       return;
     }
 
-    if (latestData && logId && !previousImageDescription && generationAttemptedRef.current !== logId) {
-      console.log(`[ImageViz] Starting image generation for logId: ${logId}`);
-      generationAttemptedRef.current = logId;
+    if (!latestData || Object.keys(latestData).length === 0 || !logId) {
+      setImageDescription(null);
+      setImageURL(null);
+      generationAttemptedForLogIdRef.current = null;
+      return;
+    }
+
+    if ((!previousImageDescription || !previousImageURL) && generationAttemptedForLogIdRef.current !== logId) {
+      generationAttemptedForLogIdRef.current = logId;
 
       const generateContent = async () => {
         try {
-          const description = await getImageDescription(latestData);
-          if (description) {
-            setImageDescription(description);
-            if (description !== previousImageDescription) {
-              await updateImageDescription({ id: logId, imageDescription: description });
-              console.log(`[ImageViz] Updated description for logId: ${logId}`);
+          let currentDescription = previousImageDescription;
+          if (!currentDescription) {
+            currentDescription = await getImageDescription(latestData);
+            if (currentDescription) {
+              setImageDescription(currentDescription);
+              await updateImageDescription({ id: logId, imageDescription: currentDescription });
+            } else {
+              console.warn(`[ImageViz] Could not generate description for logId: ${logId}`);
             }
+          }
 
-            const image = await generateImageFromDescription(description);
+          if (currentDescription && !previousImageURL) {
+            const image = await generateImageFromDescription(currentDescription);
             if (image) {
               setImageURL(image);
-              if (image !== previousImageURL) {
-                await updateImageURL({ id: logId, imageURL: image });
-                console.log(`[ImageViz] Updated image URL for logId: ${logId}`);
-              }
+              await updateImageURL({ id: logId, imageURL: image });
+            } else {
+              console.warn(`[ImageViz] Could not generate image for logId: ${logId}`);
             }
           }
         } catch (error) {
           console.error(`[ImageViz] Error generating image/description for logId ${logId}:`, error);
+          setImageDescription(null);
+          setImageURL(null);
         }
       };
       generateContent();

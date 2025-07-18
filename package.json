@@ -21,6 +21,9 @@
   "packageManager": "pnpm@9.15.1",
   "dependencies": {
     "@google/genai": "^1.8.0",
-    "react-native-canvas": "^0.1.40"
+    "@stripe/stripe-js": "^5.6.0",
+    "convex": "^1.10.0",
+    "react-native-canvas": "^0.1.40",
+    "stripe": "^18.3.0"
   }
 }

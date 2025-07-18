@@ -14,7 +14,6 @@ export default function ConvexClientProvider({
   children: ReactNode;
 }) {
   return (
-    // NOTE: Once you get Clerk working you can remove this error boundary
     <ErrorBoundary>
       <ClerkProvider
         publishableKey={process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY!}

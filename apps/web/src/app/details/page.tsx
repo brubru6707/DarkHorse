@@ -1,5 +1,7 @@
 import React from "react";
 import Header from "@/components/Header";
+import Footer from "@/components/Footer";
+import DataPolicyDisclaimer from "@/components/DataPolicyDisclaimer";
 
 const dataFields = [
   {
@@ -93,6 +95,7 @@ export default function DetailsPage() {
   return (
     <>
     <Header />
+    <DataPolicyDisclaimer />
     <main className="p-6 bg-[--background-color] text-white min-h-screen">
       <h1 className="text-5xl font-bold text-[--color-primary] mb-10">🔐 Data Exposure Details</h1>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
@@ -109,6 +112,7 @@ export default function DetailsPage() {
         ))}
       </div>
     </main>
+    <Footer />
     </>
   );
 }

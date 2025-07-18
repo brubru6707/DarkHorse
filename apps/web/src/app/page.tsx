@@ -1,20 +1,19 @@
 "use client";
 
 import Header from "@/components/Header";
-// import Footer from "@/components/home/Footer";
-// import FooterHero from "@/components/home/FooterHero";
+import Footer from "@/components/Footer";
+import DataPolicyDisclaimer from "@/components/DataPolicyDisclaimer";
 import Hero from "@/components/home/Hero";
-// import Testimonials from "@/components/home/Testimonials";
 
 export default function Home() {
   return (
-    <main>
+    <main className="min-h-screen flex flex-col">
       <Header />
-      <Hero />
-      {/* <Benefits />
-      <Testimonials />
-      <FooterHero />
-      <Footer /> */}
+      <DataPolicyDisclaimer />
+      <div className="flex-grow">
+        <Hero />
+      </div>
+      <Footer />
     </main>
   );
 }

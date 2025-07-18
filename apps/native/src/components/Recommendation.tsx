@@ -4,6 +4,30 @@ import { useMutation } from 'convex/react';
 import { api } from '@packages/backend/convex/_generated/api';
 import { Id } from '@packages/backend/convex/_generated/dataModel';
 
+async function generateRecommendation(data: object): Promise<string | null> {
+  try {
+    const response = await fetch('/api/generate-recommendation', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ data }),
+    });
+
+    if (!response.ok) {
+      const errorData = await response.json();
+      console.error('API Error:', errorData.message);
+      return null;
+    }
+
+    const result = await response.json();
+    return result.recommendation || null;
+  } catch (error) {
+    console.error("Error calling generate-recommendation API:", error);
+    return null;
+  }
+}
+
 type RecommendationProps = {
   latestData: object | null;
   logId: Id<"userDataLogs"> | null;

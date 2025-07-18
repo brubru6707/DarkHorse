@@ -13,23 +13,32 @@ interface NmapOutputDisplayProps {
 export default function NmapOutputDisplay({ logId, previousNmapData, latestData }: NmapOutputDisplayProps) {
   const updateNmapData = useMutation(api.logUserData.updateNmapData);
   const [nmapData, setNmapData] = useState<string | null>(null);
-
   useEffect(() => {
-    if (previousNmapData) {
+    if (previousNmapData && previousNmapData !== "") {
       setNmapData(previousNmapData);
       return;
     }
     const runScan = async () => {
-      if (!latestData?.ip || !logId) return;
-      const result = await runNmapScan(latestData.ip);
-      setNmapData(result);
-      await updateNmapData({ id: logId, nmapData: result });
+      if (!latestData?.ip || !logId) {
+        setNmapData(null);
+        return;
+      }
+      setNmapData("Nmap running...");
+      try {
+        const result = await runNmapScan(latestData.ip);
+        setNmapData(result);
+        await updateNmapData({ id: logId, nmapData: result });
+      } catch (error) {
+        console.error("Failed to run Nmap scan:", error);
+        setNmapData("Failed to retrieve Nmap data.");
+      }
     };
-    runScan();
+    if (!previousNmapData || previousNmapData.trim() === "")
+      runScan();
   }, [previousNmapData, latestData, logId, updateNmapData]);
 
   if (!nmapData) {
-    return <span>Nmap running...</span>;
+    return <span>Nmap data not available or still running...</span>;
   }
 
   return (

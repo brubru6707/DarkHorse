@@ -21,7 +21,6 @@ export default function NmapOutputDisplay({ logId, previousNmapData, latestData 
       if (!latestData?.ip || !logId) return;
       setLoading(true);
       try {
-        // Replace this with your actual API call for Expo/React Native
         const response = await fetch('https://your-api-endpoint/nmap', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },

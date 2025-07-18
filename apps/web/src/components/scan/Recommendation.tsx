@@ -40,6 +40,7 @@ export default function Recommendation({ latestData, logId, previousRecommendati
   const updateRecommendation = useMutation(api.logUserData.updateRecommendation);
   const generatingForLogIdRef = useRef<Id<"userDataLogs"> | null>(null);
 
+  // Update recommendation if it's different from the previous one
   useEffect(() => {
     if (previousRecommendation && recommendation !== previousRecommendation) {
       setRecommendation(previousRecommendation);
@@ -58,32 +59,31 @@ export default function Recommendation({ latestData, logId, previousRecommendati
       return;
     }
 
-    generatingForLogIdRef.current = logId;
+    if (!previousRecommendation || previousRecommendation.trim() === "") {
+      generatingForLogIdRef.current = logId;
 
-    const generate = async () => {
-      console.log("Recommendation: Generating new recommendation for logId:", logId);
-      const newRecommendation = await generateRecommendation(latestData);
+      const generate = async () => {
+        try {
+          const newRecommendation = await generateRecommendation(latestData);
 
-      if (newRecommendation) {
-        console.log("Recommendation: Updating recommendation in DB for logId:", logId);
-        await updateRecommendation({ id: logId, recommendation: newRecommendation });
-        setRecommendation(newRecommendation);
-        generatingForLogIdRef.current = null;
-      } else {
-        console.log("Recommendation: Failed to generate recommendation.");
-        setRecommendation(null);
-        generatingForLogIdRef.current = null;
-      }
-    };
-
-    if (!previousRecommendation) {
+          if (newRecommendation) {
+            await updateRecommendation({ id: logId, recommendation: newRecommendation });
+            setRecommendation(newRecommendation);
+          } else {
+            setRecommendation("Failed to generate recommendation.");
+          }
+        } catch (error) {
+          setRecommendation("Error generating recommendation.");
+        } finally {
+          generatingForLogIdRef.current = null;
+        }
+      };
       generate();
     }
-
   }, [latestData, logId, previousRecommendation, updateRecommendation, recommendation]);
 
   if (recommendation === null) {
-    if (!previousRecommendation && latestData && logId) {
+    if ((!previousRecommendation || previousRecommendation.trim() === "") && latestData && logId) {
         return <span>Generating recommendation...</span>;
     }
     return <span>No recommendation available.</span>;

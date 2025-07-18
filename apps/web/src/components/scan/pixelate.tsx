@@ -60,6 +60,8 @@ const PixelatedImageDisplay: React.FC<PixelatedImageProps> = ({
         src={`data:image/png;base64,${base64Image}`}
         alt="Generated Image"
         style={{ display: 'none' }}
+        width={100}
+        height={100}
         onLoad={handleImageLoad}
         onError={(e) => console.error("Error loading image for pixelation:", e.currentTarget.src)}
       />
