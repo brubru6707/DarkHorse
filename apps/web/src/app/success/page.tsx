@@ -7,6 +7,7 @@ import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import { useAuth } from "@clerk/nextjs";
 import { useRouter } from "next/navigation";
+import Link from 'next/link';
 
 export default function SuccessPage() {
   const { userId, isLoaded: isClerkLoaded } = useAuth();
@@ -69,9 +70,9 @@ export default function SuccessPage() {
         <p className="text-md text-gray-500">
           You can now return to your dashboard or continue exploring DarkHorse.
         </p>
-        <a href="/" className="mt-8 bg-green-500 text-black border border-green-500 rounded-md px-8 py-3 text-lg font-semibold hover:bg-green-600 transition-colors duration-200">
+        <Link href="/" className="mt-8 bg-green-500 text-black border border-green-500 rounded-md px-8 py-3 text-lg font-semibold hover:bg-green-600 transition-colors duration-200">
           Go to Dashboard
-        </a>
+        </Link>
       </div>
       <Footer />
     </>

@@ -39,7 +39,7 @@ export default function DataPolicyDisclaimer() {
       </button>
       <h3 className="text-lg font-bold text-green-400 mb-2 text-center">Your Data Privacy</h3>
       <p className="text-sm md:text-base leading-relaxed text-center">
-        When you sign up for an account and perform a scan (which starts automatically if you haven't done one yet),
+        When you sign up for an account and perform a scan (which starts automatically if you haven&apos;t done one yet),
         your scan data, Nmap output, image visualizations, and recommendations are securely saved to our database.
         This is done to provide you with a personalized visual history and timeline of your scans, allowing you to
         track changes and review past analyses.

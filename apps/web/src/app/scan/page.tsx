@@ -114,7 +114,7 @@ export default function ScanPage() {
     console.log("Starting a new scan...");
     setSelectedHistoricalEntry(null);
     sendUserData();
-  }, [sendUserData]);
+  }, [sendUserData, scanCount]);
 
   const displayDataEntry = selectedHistoricalEntry ? {
     _id: selectedHistoricalEntry.id,

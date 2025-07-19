@@ -4,6 +4,7 @@ import React, { useState, useCallback } from 'react';
 import { useAuth } from "@clerk/nextjs";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
+import Link from 'next/link';
 
 export default function CancelSubscriptionPage() {
   const { userId, isLoaded: isClerkLoaded } = useAuth();
@@ -79,9 +80,9 @@ export default function CancelSubscriptionPage() {
               <p className="text-sm text-gray-400 text-center">
                 Your Pro features will remain active until the end of your current billing cycle.
               </p>
-              <a href="/" className="w-full sm:w-auto mt-6 bg-green-500 text-black border border-green-500 rounded-lg px-6 py-3 text-base sm:text-lg font-semibold hover:bg-green-600 transition-colors duration-200 text-center block focus:outline-none focus:ring-2 focus:ring-green-400">
+              <Link href="/" className="w-full sm:w-auto mt-6 bg-green-500 text-black border border-green-500 rounded-lg px-6 py-3 text-base sm:text-lg font-semibold hover:bg-green-600 transition-colors duration-200 text-center block focus:outline-none focus:ring-2 focus:ring-green-400">
                 Go to the Homepage
-              </a>
+              </Link>
             </>
           )}
           {cancellationStatus === 'error' && (

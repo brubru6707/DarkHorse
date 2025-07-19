@@ -24,7 +24,7 @@ export default function Hero() {
           <div className="bg-green-950/60 rounded-2xl p-10 shadow-lg flex flex-col h-full">
             <h2 className="text-3xl font-semibold text-[--color-primary] mb-3">✅ Consent-Based Scanning</h2>
             <p className="text-xl">
-              When you sign up for an account and perform a scan (which starts automatically if you haven't done one yet),
+              When you sign up for an account and perform a scan (which starts automatically if you haven&apos;t done one yet),
               your scan data, Nmap output, image visualizations, and recommendations are securely saved to our database.
               This is done to provide you with a personalized visual history and timeline of your scans, allowing you to
               track changes and review past analyses.

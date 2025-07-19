@@ -70,7 +70,7 @@ export default function PricingPage() {
         </h1>
         <p className="text-lg md:text-xl text-gray-400 mb-12 text-center max-w-2xl">
           Start with our free scans to experience the power of AI-driven network analysis.
-          When you're ready for more, our Pro plan offers comprehensive benefits.
+          When you&apos;re ready for more, our Pro plan offers comprehensive benefits.
         </p>
 
         {errorMessage && (
@@ -124,7 +124,7 @@ export default function PricingPage() {
             <div>
               <h4 className="font-semibold text-green-300">What happens after my 3 free scans?</h4>
               <p className="text-gray-400">
-                After you've used your initial 3 free scans, you'll need to subscribe to our Pro plan to continue using the service.
+                After you&apos;ve used your initial 3 free scans, you&apos;ll need to subscribe to our Pro plan to continue using the service.
               </p>
             </div>
             <div>

@@ -1,3 +1,4 @@
+// components/scan/pixelate.tsx
 'use client';
 
 import Image from 'next/image';
@@ -20,7 +21,8 @@ const PixelatedImageDisplay: React.FC<PixelatedImageProps> = ({
     const canvas = canvasRef.current;
     const image = imageRef.current;
 
-    if (!canvas || !image || !isImageLoaded) return;
+    // Remove isImageLoaded from the internal check, as the calling useEffect will handle this.
+    if (!canvas || !image) return;
 
     const ctx = canvas.getContext('2d');
     if (!ctx) return;
@@ -37,13 +39,17 @@ const PixelatedImageDisplay: React.FC<PixelatedImageProps> = ({
     ctx.drawImage(image, 0, 0, downscaledWidth, downscaledHeight);
     ctx.drawImage(canvas, 0, 0, downscaledWidth, downscaledHeight, 0, 0, canvas.width, canvas.height);
 
-  }, [base64Image, pixelationFactor, isImageLoaded]);
+  }, [base64Image, pixelationFactor]); // Removed isImageLoaded from dependencies
 
   useEffect(() => {
+    // Only call applyPixelation when the image is confirmed loaded.
     if (isImageLoaded) {
       applyPixelation();
     }
-  }, [applyPixelation, isImageLoaded]);
+    // Dependency array for useEffect includes applyPixelation and isImageLoaded
+    // This ensures that if applyPixelation (due to prop changes) or isImageLoaded changes,
+    // the effect re-runs.
+  }, [applyPixelation, isImageLoaded]); // isImageLoaded IS needed here to trigger when the image is ready.
 
   const handleImageLoad = () => {
     setIsImageLoaded(true);
@@ -60,8 +66,8 @@ const PixelatedImageDisplay: React.FC<PixelatedImageProps> = ({
         src={`data:image/png;base64,${base64Image}`}
         alt="Generated Image"
         style={{ display: 'none' }}
-        width={100}
-        height={100}
+        width={100} // Consider setting more appropriate default dimensions or passing them as props
+        height={100} // These are placeholders, ensure they are suitable for your images
         onLoad={handleImageLoad}
         onError={(e) => console.error("Error loading image for pixelation:", e.currentTarget.src)}
       />
