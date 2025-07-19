@@ -142,7 +142,7 @@ export default function ScanPage() {
       return null;
     }
     const fullAddress = encodeURIComponent(`${currentCityData.city}, ${currentCityData.region}, ${currentCityData.country}`);
-    return `http://maps.google.com/maps?q=${fullAddress}&output=embed`;
+    return `https://maps.google.com/maps?q=${fullAddress}&output=embed`;
   }, [currentCityData]);
 
   return (
