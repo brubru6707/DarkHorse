@@ -108,8 +108,12 @@ export default function ScanPage() {
   }, []);
 
   const handleStartNewScan = useCallback(() => {
-    console.log("latestDataLogs", latestDataLogs);
-    console.log("getUserPlan", getUserPlan);
+    if (latestDataLogs) {
+      alert("YO")
+    }
+    if (getUserPlan) {
+      alert("cho")
+    }
     if (latestDataLogs && latestDataLogs.length >= (getUserPlan === "pro" ? 29 : 2)) {
       alert("You have no scans left :(");
       return;
