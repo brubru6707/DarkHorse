@@ -16,13 +16,33 @@ export async function POST(request: NextRequest) {
     // Define separate regexes for IPv4 and IPv6
     const ipv4Regex = /^(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$/;
 
+    // const ipv6Regex = new RegExp(
+    //   "^(?:[A-F0-9]{1,4}:){7}[A-F0-9]{1,4}$|" + // IPv6 full
+    //   "^(?:[A-F0-9]{1,4}:){1,7}:(?:[A-F0-9]{1,4}){1,7}$|" + // IPv6 shorthand (:: at start/end)
+    //   "^(?:[A-F0-9]{1,4}:){1,6}:[A-F0-9]{1,4}$|" + // IPv6 shorthand (:: in middle)
+    //   "^::(?:[A-F0-9]{1,4}:){0,5}[A-F0-9]{1,4}$|" + // IPv6 shorthand (:: at start)
+    //   "^[A-F0-9]{1,4}:(?:[A-F0-9]{1,4}:){0,5}:[A-F0-9]{1,4}$|" + // IPv6 shorthand (:: in middle)
+    //   "^[A-F0-9]{1,4}:(?:[A-F0-9]{1,4}:){0,4}:(?:[0-9]{1,3}\\.){3}[0-9]{1,3}$" // IPv6 with embedded IPv4
+    //   , "i" // 'i' flag for case-insensitive matching of hex characters in IPv6
+    // );
+    
     const ipv6Regex = new RegExp(
-      "^(?:[A-F0-9]{1,4}:){7}[A-F0-9]{1,4}$|" + // IPv6 full
-      "^(?:[A-F0-9]{1,4}:){1,7}:(?:[A-F0-9]{1,4}){1,7}$|" + // IPv6 shorthand (:: at start/end)
-      "^(?:[A-F0-9]{1,4}:){1,6}:[A-F0-9]{1,4}$|" + // IPv6 shorthand (:: in middle)
-      "^::(?:[A-F0-9]{1,4}:){0,5}[A-F0-9]{1,4}$|" + // IPv6 shorthand (:: at start)
-      "^[A-F0-9]{1,4}:(?:[A-F0-9]{1,4}:){0,5}:[A-F0-9]{1,4}$|" + // IPv6 shorthand (:: in middle)
-      "^[A-F0-9]{1,4}:(?:[A-F0-9]{1,4}:){0,4}:(?:[0-9]{1,3}\\.){3}[0-9]{1,3}$" // IPv6 with embedded IPv4
+      "^(" +
+      "([0-9a-fA-F]{1,4}:){7}[0-9a-fA-F]{1,4}|" + // Full IPv6 address
+      "([0-9a-fA-F]{1,4}:){1,7}:|" +             // Starts with groups, ends with ::
+      ":([0-9a-fA-F]{1,4}:){1,7}|" +             // Starts with ::, ends with groups
+      "([0-9a-fA-F]{1,4}:){1,6}:[0-9a-fA-F]{1,4}|" + // Groups, then ::, then groups (max 6 preceding, 1 following)
+      "([0-9a-fA-F]{1,4}:){1,5}(:[0-9a-fA-F]{1,4}){1,2}|" + // More complex compressed forms
+      "([0-9a-fA-F]{1,4}:){1,4}(:[0-9a-fA-F]{1,4}){1,3}|" +
+      "([0-9a-fA-F]{1,4}:){1,3}(:[0-9a-fA-F]{1,4}){1,4}|" +
+      "([0-9a-fA-F]{1,4}:){1,2}(:[0-9a-fA-F]{1,4}){1,5}|" +
+      "[0-9a-fA-F]{1,4}:((:[0-9a-fA-F]{1,4}){1,6})|" +
+      "::" +                                      // Just ::
+      "::(:[0-9a-fA-F]{1,4}){1,6}|" +             // :: followed by up to 6 groups
+      "([0-9a-fA-F]{1,4}:){1,6}:[0-9a-fA-F]{1,4}:[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}|" + // IPv4 embedded
+      "::([0-9a-fA-F]{1,4}:){0,4}[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}|" + // IPv4 embedded with ::
+      "([0-9a-fA-F]{1,4}:){0,5}:[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}" + // IPv4 embedded with ::
+      ")"
       , "i" // 'i' flag for case-insensitive matching of hex characters in IPv6
     );
 
