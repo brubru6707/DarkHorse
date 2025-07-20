@@ -38,7 +38,6 @@ export default function ScanPage() {
   const getUserPlan = useQuery(api.users.getUserPlan);
   const [initialScanAttempted, setInitialScanAttempted] = useState(false);
   const [selectedHistoricalEntry, setSelectedHistoricalEntry] = useState<HistoricalEntry | null>(null);
-  const [scanCount, setScanCountFrontend] = useState(3);
 
   const latestDataEntry = useMemo(() => {
     if (!latestDataLogs || latestDataLogs.length === 0)
@@ -53,13 +52,6 @@ export default function ScanPage() {
     }
     return extractEssentialDetails(dataToExtract);
   }, [latestDataEntry, selectedHistoricalEntry]);
-
-  useEffect(() => {
-    if (isClerkLoaded && userId) {
-      const userRemainingScans = getUserRemainingScans;
-      setScanCountFrontend(userRemainingScans ?? 3);
-    }
-  }, [isClerkLoaded, userId, getUserRemainingScans]);
 
   const sendUserData = useCallback(async () => {
     try {
@@ -120,7 +112,7 @@ export default function ScanPage() {
     console.log("Starting a new scan...");
     // setSelectedHistoricalEntry(null);
     // sendUserData();
-  }, [sendUserData, scanCount]);
+  }, [sendUserData]);
 
   const displayDataEntry = selectedHistoricalEntry ? {
     _id: selectedHistoricalEntry.id,

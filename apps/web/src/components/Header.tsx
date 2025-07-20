@@ -32,6 +32,9 @@ export default function Header() {
       if (getUserRemainingScans !== undefined && latestDataLogs !== undefined) {
         const currentMonthLogsCount = latestDataLogs?.length ?? 0;
         const remaining = Math.max(0, (getUserPlan === "pro" ? 30 : 3) - currentMonthLogsCount);
+        console.log("HEADER - remaining", remaining);
+        console.log("HEADER - currentMonthLogsCount", currentMonthLogsCount);
+        console.log("HEADER - getUserPlan", getUserPlan);
         setScanCountDisplay(remaining);
       }
     }
