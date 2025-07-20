@@ -108,13 +108,15 @@ export default function ScanPage() {
   }, []);
 
   const handleStartNewScan = useCallback(() => {
+    console.log("latestDataLogs", latestDataLogs);
+    console.log("getUserPlan", getUserPlan);
     if (latestDataLogs && latestDataLogs.length >= (getUserPlan === "pro" ? 29 : 2)) {
       alert("You have no scans left :(");
       return;
     }
     console.log("Starting a new scan...");
-    setSelectedHistoricalEntry(null);
-    sendUserData();
+    // setSelectedHistoricalEntry(null);
+    // sendUserData();
   }, [sendUserData, scanCount]);
 
   const displayDataEntry = selectedHistoricalEntry ? {
@@ -143,7 +145,7 @@ export default function ScanPage() {
       return null;
     }
     const fullAddress = encodeURIComponent(`${currentCityData.city}, ${currentCityData.region}, ${currentCityData.country}`);
-    return `https ://maps.google.com/maps?q=${fullAddress}&output=embed`;
+    return `https://maps.google.com/maps?q=${fullAddress}&output=embed`;
   }, [currentCityData]);
 
   return (
