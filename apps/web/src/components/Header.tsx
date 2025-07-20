@@ -38,7 +38,7 @@ export default function Header() {
         const currentMonthLogsCount = latestDataLogs?.length ?? 0;
         
         // Calculate the actual remaining scans for display. Ensure it doesn't go below zero.
-        const remaining = Math.max(0, (getUserRemainingScans ?? 0) - currentMonthLogsCount);
+        const remaining = Math.max(0, (getUserPlan === "pro" ? 30 : 3) - currentMonthLogsCount);
         setScanCountDisplay(remaining);
       }
     }

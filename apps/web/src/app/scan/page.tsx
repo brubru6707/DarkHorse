@@ -35,6 +35,7 @@ export default function ScanPage() {
   const addUser = useMutation(api.users.addUser);
   const isUserInConvex = useQuery(api.users.isUserInConvex);
   const getUserRemainingScans = useQuery(api.users.getUserRemainingScans);
+  const getUserPlan = useQuery(api.users.getUserPlan);
   const [initialScanAttempted, setInitialScanAttempted] = useState(false);
   const [selectedHistoricalEntry, setSelectedHistoricalEntry] = useState<HistoricalEntry | null>(null);
   const [scanCount, setScanCountFrontend] = useState(3);
@@ -107,7 +108,7 @@ export default function ScanPage() {
   }, []);
 
   const handleStartNewScan = useCallback(() => {
-    if (scanCount <= 0) {
+    if (latestDataLogs && latestDataLogs.length >= (getUserPlan === "pro" ? 29 : 2)) {
       alert("You have no scans left :(");
       return;
     }
@@ -142,7 +143,7 @@ export default function ScanPage() {
       return null;
     }
     const fullAddress = encodeURIComponent(`${currentCityData.city}, ${currentCityData.region}, ${currentCityData.country}`);
-    return `https://maps.google.com/maps?q=${fullAddress}&output=embed`;
+    return `https ://maps.google.com/maps?q=${fullAddress}&output=embed`;
   }, [currentCityData]);
 
   return (

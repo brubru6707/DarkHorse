@@ -48,8 +48,8 @@ export default function HistoryTimeline({ historicalEntries = [], onSelectEntry,
       <h2 className="text-xl font-bold text-white mb-4">Activity History</h2>
 
       <div className="w-full scrollbar-hide overflow-x-auto pb-4">
-        <div className="relative flex items-center justify-center w-full scrollbar-hide py-4">
-          <div className="absolute left-0 right-0 h-1 bg-green-800 scrollbar-hide z-0 mx-auto w-full"></div>
+        <div className="relative flex items-center justify-center min-w-max scrollbar-hide py-4">
+          <div className="absolute top-1/2 left-0 right-0 h-1 bg-green-800 scrollbar-hide z-0 transform -translate-y-1/2"></div>
 
           {historicalEntries.map((entry) => (
             <div
