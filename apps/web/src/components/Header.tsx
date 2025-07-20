@@ -28,16 +28,9 @@ export default function Header() {
 
   useEffect(() => {
     if (isClerkLoaded && userId) {
-      // Update local state for user plan
       setUserPlan(getUserPlan); 
-
-      // Only proceed if getUserRemainingScans and latestDataLogs have loaded
       if (getUserRemainingScans !== undefined && latestDataLogs !== undefined) {
-        // The scansRemaining from the user object already reflects the monthly reset.
-        // We only need to subtract the current month's *consumed* usage from it.
         const currentMonthLogsCount = latestDataLogs?.length ?? 0;
-        
-        // Calculate the actual remaining scans for display. Ensure it doesn't go below zero.
         const remaining = Math.max(0, (getUserPlan === "pro" ? 30 : 3) - currentMonthLogsCount);
         setScanCountDisplay(remaining);
       }

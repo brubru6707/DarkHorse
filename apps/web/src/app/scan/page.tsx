@@ -108,13 +108,12 @@ export default function ScanPage() {
   }, []);
 
   const handleStartNewScan = useCallback(() => {
-    if (latestDataLogs) {
-      alert("YO")
-    }
-    if (getUserPlan) {
-      alert("cho")
-    }
-    if (latestDataLogs && latestDataLogs.length >= (getUserPlan === "pro" ? 29 : 2)) {
+    const currentMonthLogsCount = latestDataLogs?.length ?? 0;
+    const remaining = Math.max(0, (getUserPlan === "pro" ? 30 : 3) - currentMonthLogsCount);
+    console.log("remaining", remaining);
+    console.log("check", remaining <= 0);
+    console.log("check2", remaining <= 1);
+    if (remaining <= 0) {
       alert("You have no scans left :(");
       return;
     }
