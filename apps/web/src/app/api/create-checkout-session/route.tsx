@@ -18,7 +18,7 @@ export async function POST(req: NextRequest) {
       success_url: `${process.env.NEXT_PUBLIC_BASE_URL}/success?session_id={CHECKOUT_SESSION_ID}`,
       line_items: [
         {
-          price: "price_1RmExR4G62EmgPYd8BRS8cmZ",
+          price: "price_1Rn2UWKkNphBTPXqaoeRKAuh",
           quantity: 1,
         },
       ],
