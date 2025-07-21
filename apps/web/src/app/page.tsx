@@ -3,7 +3,9 @@
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import DataPolicyDisclaimer from "@/components/DataPolicyDisclaimer";
-import Hero from "@/components/home/Hero";
+import HeroMain from "@/components/home/HeroMain";
+import HeroInfo from "@/components/home/HeroInfo";
+import DemoVideo from "@/components/home/DemoVideo";
 
 export default function Home() {
   return (
@@ -11,7 +13,9 @@ export default function Home() {
       <Header />
       <DataPolicyDisclaimer />
       <div className="flex-grow">
-        <Hero />
+          <HeroMain />
+          <DemoVideo />
+          <HeroInfo />
       </div>
       <Footer />
     </main>
